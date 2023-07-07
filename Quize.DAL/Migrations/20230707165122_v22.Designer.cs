@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Quize.DAL.DBContext;
 
@@ -10,9 +11,11 @@ using Quize.DAL.DBContext;
 namespace Quize.DAL.Migrations
 {
     [DbContext(typeof(ExameAppDbContext))]
-    partial class ExameAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230707165122_v22")]
+    partial class v22
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

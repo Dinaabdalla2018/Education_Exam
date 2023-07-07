@@ -15,7 +15,8 @@ namespace JwtWebApiTutorial.Controllers
         //    _BookService = BookService;
         //}
         //Get info student
-        [HttpGet("{id}"), Authorize]
+        [HttpGet("{id}")]
+        [Authorize]
         public IActionResult Get(int id)
         {
             //var Book = _BookService.GetById(id);

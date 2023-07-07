@@ -10,6 +10,7 @@ namespace Quize.BAL.Services
     public interface IChoicesServices
     {
         IEnumerable<Choices> GetAll();
+        IEnumerable<Choices> GetQuestionChoices(int id);
         Choices GetById(int id);
         Choices GetByIdAsNoTracking(int id);
         void Insert(Choices choices);

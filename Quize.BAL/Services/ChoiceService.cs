@@ -1,4 +1,5 @@
-﻿using Quize.DAL.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Quize.DAL.Models;
 using Quize.DAL.Repositories;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,8 @@ namespace Quize.BAL.Services
         }
         public void Delete(int id)
         {
-            IChoiceRepository.Delete(id);
+            var choice = IChoiceRepository.GetById(id);
+            choice.IsDeleted = true;
             IChoiceRepository.Save();
 
         }
@@ -26,6 +28,10 @@ namespace Quize.BAL.Services
         public IEnumerable<Choices> GetAll()
         {
             return IChoiceRepository.GetAll();
+        }
+        public IEnumerable<Choices> GetQuestionChoices(int id)
+        {
+            return IChoiceRepository.GetAll().Where(c => c.QuestionId ==id && c.IsDeleted==false);
         }
 
         public Choices GetById(int id)
@@ -37,6 +43,7 @@ namespace Quize.BAL.Services
         {
             return IChoiceRepository.GetByIdAsNoTracking(id);
         }
+
 
         public void Insert(Choices choices)
         {

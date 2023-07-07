@@ -1,4 +1,5 @@
-﻿using Quize.DAL.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Quize.DAL.Models;
 using Quize.DAL.Repositories;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Quize.BAL.Services
 {
-    internal class ExamAttemptService : IExamAttemptService
+    public class ExamAttemptService : IExamAttemptService
     {
         private readonly IGenericRepository<ExameAttempt> IExamAttemptRepository;
         public ExamAttemptService(IGenericRepository<ExameAttempt> IExamAttemptRepository)
@@ -24,6 +25,13 @@ namespace Quize.BAL.Services
         public IEnumerable<ExameAttempt> GetAll()
         {
             return IExamAttemptRepository.GetAll();
+        }
+
+        public IEnumerable<ExameAttempt> GetAllByUserID(int UsersID)
+        {
+            return IExamAttemptRepository.GetAll().Where(e => e.UserID == UsersID)
+                .Include(e => e.User)
+                .Include(e => e.Exame);
         }
 
         public ExameAttempt GetById(int id)

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Quize.DAL.ViewModel
+namespace Quize.DAL.Models.DTO
 {
-    public class SignViewModel
+    public class SignDTO
     {
-        public string Email { set; get; }
+        public string email { set; get; }
         public string password { set; get; }
     }
 }

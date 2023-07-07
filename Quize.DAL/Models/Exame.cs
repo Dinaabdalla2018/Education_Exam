@@ -11,7 +11,7 @@ namespace Quize.DAL.Models
         public int ID { get; set; }
         public string Name { get; set; }
         public bool IsDeleted { get; set; }
-        public virtual List<Questions> Questions { get; set; } = new List<Questions>();
+        public virtual List<Questions>? Questions { get; set; } = new List<Questions>();
         public virtual List<ExameAttempt>? ExameAttempts { get; set; } = new List<ExameAttempt>();
 
 

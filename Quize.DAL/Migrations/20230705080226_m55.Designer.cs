@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Quize.DAL.DBContext;
 
@@ -10,9 +11,11 @@ using Quize.DAL.DBContext;
 namespace Quize.DAL.Migrations
 {
     [DbContext(typeof(ExameAppDbContext))]
-    partial class ExameAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230705080226_m55")]
+    partial class m55
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,9 +78,6 @@ namespace Quize.DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<int>("ExameID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("HighScore")
                         .HasColumnType("int");
 
                     b.Property<int>("Score")

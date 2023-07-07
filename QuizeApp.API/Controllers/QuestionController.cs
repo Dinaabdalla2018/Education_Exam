@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Quize.BAL.Services;
 using Quize.DAL.Models;
+using Quize.DAL.Models.DTO;
 
 namespace JwtWebApiTutorial.Controllers
 {
@@ -11,19 +12,23 @@ namespace JwtWebApiTutorial.Controllers
     public class QuestionController : ControllerBase
     {
         private readonly IQuestionsService _questionService;
+        private readonly IChoicesServices _choicesService;
 
-        public QuestionController(IQuestionsService questionService)
+        public QuestionController(IQuestionsService questionService, IChoicesServices choicesService)
         {
             _questionService = questionService;
+            _choicesService = choicesService;
         }
 
-        [HttpGet, Authorize]
+        [HttpGet]
+        [Authorize]
         public IActionResult Get()
         {
            return Ok(_questionService.GetAll());
         }
 
-        [HttpGet("{id}"), Authorize]
+        [HttpGet("{id}")]
+        [Authorize]
         public IActionResult Get(int id)
         {
             var Question = _questionService.GetById(id);
@@ -32,6 +37,29 @@ namespace JwtWebApiTutorial.Controllers
 
             return Ok(Question);
         }
+
+
+        [HttpGet("Exam/{id}")]
+        public IActionResult GetExamQuestions(int id)
+        {
+            var questions = _questionService.GetAllQuestionOfExam(id);
+            if (questions == null)
+                return NotFound();
+            List<ExamDTO> examDtos = new List<ExamDTO>();
+            foreach (var item in questions)
+            {
+                var examDto = new ExamDTO();
+                examDto.Id = item.Id;
+                examDto.Text = item.Text;
+                examDto.CorrectAnswer = item.CorrectAnswer;
+                examDto.ExamID = item.ExameID;
+                examDto.choices = item.Choices;
+                examDto.SelectedValue = "";
+                examDtos.Add(examDto);
+            }
+            return Ok(examDtos);
+        }
+
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
@@ -57,7 +85,7 @@ namespace JwtWebApiTutorial.Controllers
             var Exist = _questionService.GetByIdAsNoTracking(question.Id);
             if (Exist == null)
             {
-                return NotFound("Book Not found");
+                return NotFound("Question Not found");
             }
 
             _questionService.Update(question);
@@ -66,7 +94,7 @@ namespace JwtWebApiTutorial.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             _questionService.Delete(id);

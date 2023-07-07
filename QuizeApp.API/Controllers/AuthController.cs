@@ -4,8 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Quize.BAL.Services;
 using Quize.DAL.Models;
-using Quize.DAL.Models.ViewModel;
-using Quize.DAL.ViewModel;
+using Quize.DAL.Models.DTO;
 using QuizeApp;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -20,7 +19,7 @@ namespace JwtWebApiTutorial.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IUserService _userService;
-        private readonly Account account =new Account();
+        private readonly Account account = new Account();
 
         public AuthController(IConfiguration configuration, IUserService userService)
         {
@@ -29,77 +28,69 @@ namespace JwtWebApiTutorial.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<UserService>> Register([FromBody] SignUpViewModel account)
+        public async Task<IActionResult> Register([FromBody] SignUpDTO account)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            
             CreatePasswordHash(account.password, out byte[] passwordHash, out byte[] passwordSalt);
             Users user = new Users()
             {
                 Name = account.Name,
                 Email = account.Email,
                 PasswordHash = passwordHash,
-                PasswordSalt= passwordSalt,
+                PasswordSalt = passwordSalt,
                 RoleId = 2,
                 IsDeleted = false
             };
-           _userService.Insert(user);
-            return Ok("Accout Created");
+            _userService.Insert(user);
+            return Ok(new { message = "Accout Created" });
 
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login([FromBody] SignViewModel signViewModel)
+        public async Task<IActionResult> Login([FromBody] SignDTO signViewModel)
         {
-            if (!ModelState.IsValid)
+
+            var user = _userService.GetAll().FirstOrDefault(u => u.Email == signViewModel.email);
+            if (user == null)
             {
-                return BadRequest(ModelState);
-            }
-            var user = _userService.GetAll().FirstOrDefault(u=>u.Email == signViewModel.Email);
-            if (user==null)
-            {
-                return BadRequest( "Invalid username");
+                return BadRequest("Invalid username");
             }
 
             if (!VerifyPasswordHash(signViewModel.password, user.PasswordHash, user.PasswordSalt))
             {
                 return BadRequest("Wrong password.");
             }
-           
+
             string token = CreateToken(user);
             SetToken();
 
-            return Ok(token);
+            return Ok(new { accessToken = token });
         }
 
         private void SetToken()
         {
-            var refreshToken = new RefreshToken
-            {
-                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
-                Expires = DateTime.Now.AddDays(7),
-                Created = DateTime.Now
-            };
+            //var refreshToken = new RefreshToken
+            //{
+            //    Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+            //    Expires = DateTime.Now.AddDays(7),
+            //    Created = DateTime.Now
+            //};
             /////////////////////////
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Expires = refreshToken.Expires
+                Expires = DateTime.Now.AddDays(7),
             };
-            Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
+            Response.Cookies.Append("refreshToken", Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)), cookieOptions);
 
-            account.RefreshToken = refreshToken.Token;
-            account.TokenCreated = refreshToken.Created;
-            account.TokenExpires = refreshToken.Expires;
+
         }
 
         private string CreateToken(Users user)
         {
             List<Claim> claims = new List<Claim>
             {
-                  new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Name),
                 new Claim(ClaimTypes.Role, user.role.Name)
             };
@@ -128,7 +119,7 @@ namespace JwtWebApiTutorial.Controllers
             }
         }
 
-        private bool VerifyPasswordHash(string password, byte[] passwordHash,  byte[] passwordSalt)  
+        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
             using (var hmac = new HMACSHA512(passwordSalt))
             {

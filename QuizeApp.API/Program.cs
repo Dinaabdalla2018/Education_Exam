@@ -40,6 +40,8 @@ namespace QuizeApp
             builder.Services.AddScoped<IExamService, ExamService>();
             builder.Services.AddScoped<IQuestionsService, QuestionService>();
             builder.Services.AddScoped<IChoicesServices, ChoiceService>();
+            builder.Services.AddScoped<IExamAttemptService, ExamAttemptService>();
+
 
             builder.Services.AddSwaggerGen(options =>
             {
@@ -68,7 +70,7 @@ namespace QuizeApp
             builder.Services.AddCors(options => options.AddPolicy(name: "NgOrigins",
                 policy =>
                 {
-                    policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+                    policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
                 }));
 
             var app = builder.Build();
@@ -80,12 +82,11 @@ namespace QuizeApp
                 app.UseSwaggerUI();
             }
 
+            app.UseCors("NgOrigins");
             app.UseHttpsRedirection();
             app.UseAuthentication();
 
             app.UseAuthorization();
-
-
             app.MapControllers();
 
             app.Run();

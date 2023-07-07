@@ -15,8 +15,9 @@ namespace Quize.DAL.Models
         [ForeignKey("Exame")]
         public int ExameID { get; set; }
         public virtual Exame? Exame { get; set; }
-        public virtual  Users? User { get; set; }
+        public virtual Users? User { get; set; }
         public int Score { get; set; }
 
+        public int HighScore { get; set; }
     }
 }

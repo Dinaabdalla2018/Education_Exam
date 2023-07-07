@@ -17,16 +17,29 @@ namespace QuizeApp.Controllers
             _choiceService = choiceService;
         }
 
-        [HttpGet, Authorize]
+        [HttpGet]
+        [Authorize]
         public IActionResult Get()
         {
             return Ok(_choiceService.GetAll());
         }
 
-        [HttpGet("{id}"), Authorize]
+        [HttpGet("{id}")]
+        [Authorize]
         public IActionResult Get(int id)
         {
             var Question = _choiceService.GetById(id);
+            if (Question == null)
+                return NotFound();
+
+            return Ok(Question);
+        }
+
+        [HttpGet("Question/{id}")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult GetQuestionChoices(int id)
+        {
+            var Question = _choiceService.GetQuestionChoices(id);
             if (Question == null)
                 return NotFound();
 
@@ -56,7 +69,7 @@ namespace QuizeApp.Controllers
             var Exist = _choiceService.GetByIdAsNoTracking(choice.Id);
             if (Exist == null)
             {
-                return NotFound("Book Not found");
+                return NotFound("choice Not found");
             }
 
             _choiceService.Update(choice);

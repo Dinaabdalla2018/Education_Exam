@@ -11,6 +11,7 @@ namespace Quize.BAL.Services
     {
         IEnumerable<Questions> GetAll();
         Questions GetById(int id);
+        IEnumerable<Questions> GetAllQuestionOfExam(int id);
         Questions GetByIdAsNoTracking(int id);
         void Insert(Questions questions);
         void Update(Questions questions);

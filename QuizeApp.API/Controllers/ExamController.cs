@@ -18,13 +18,15 @@ namespace JwtWebApiTutorial.Controllers
             _examService = ExamService;
         }
 
-        [HttpGet,Authorize]
+        [HttpGet]
+        [Authorize]
         public IActionResult Get()
         {
             return Ok(_examService.GetAll());
         }
 
-        [HttpGet("{id}"), Authorize]
+        [HttpGet("{id}")]
+        [Authorize]
         public IActionResult Get(int id)
         {
             var Exam = _examService.GetById(id);
@@ -52,6 +54,25 @@ namespace JwtWebApiTutorial.Controllers
         {
             _examService.Delete(id);
             return Ok(id);
+        }
+
+        [HttpPut]
+        [Authorize(Roles = "Admin")]
+        public IActionResult Put([FromBody] Exame exam)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var Exist = _examService.GetByIdAsNoTracking(exam.ID);
+            if (Exist == null)
+            {
+                return NotFound("Exam Not found");
+            }
+
+            _examService.Update(exam);
+            return Ok(exam);
+
         }
     }
 }

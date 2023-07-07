@@ -1,24 +1,22 @@
-﻿using System;
+﻿using Quize.DAL.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Quize.DAL.Models
+namespace Quize.DAL.Models.DTO
 {
-    public class Questions
+    public class ExamDTO
     {
         public int Id { get; set; }
         public string Text { get; set; }
         public string CorrectAnswer { get; set; }
-        [ForeignKey("Exame")]
-        public int  ExameID { get; set; }
-        public virtual Exame? Exame { get; set; }
-        public virtual List<Choices>? Choices { get; set; }
+        public string SelectedValue { get; set; }
 
-        public bool IsDeleted { get; set; }
+        public int ExamID { get; set; }
 
-
+        public List<Choices> choices { get; set; } = new List<Choices>();
     }
 }

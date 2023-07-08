@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from 'src/app/Services/Auth/authentication.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-register',
@@ -63,6 +64,12 @@ export class RegisterComponent implements OnInit {
       .subscribe({
         next: (res => {
           console.log(res.message);
+          Swal.fire({
+            icon: 'success',
+            title: 'Welcome Dear.',
+            showConfirmButton: false,
+            timer: 1500,
+          });
           this.router.navigate(['/login']);
           this
         }),

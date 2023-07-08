@@ -3,7 +3,7 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
-form{
+.bgImg{
   background-image: url(/assets/images/contact.jpeg);
   color: white;
 }

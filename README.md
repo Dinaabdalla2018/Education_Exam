@@ -6,13 +6,13 @@ This is a web application for online education that allows students to take exam
 - Angular CLI
 - Visual Studio 2020
 - .NET Core 7
-- SQL Server 2017 or later
+- SQL Server 2019 or later
 
 ## Getting Started
 
 1. Clone the repository to your local machine.
-2. Open the solution file `OnlineEducation.sln` in Visual Studio.
-3. Open the `appsettings.json` file in the `OnlineEducation.API` project and replace the database connection string with your own.
+2. Open the solution file `QuizeApp.sln` in Visual Studio.
+3. Open the `appsettings.json` file in the `QuizeApp.API` project and replace the database connection string with your own.
 4. Open the Package Manager Console in Visual Studio and run the following command to create the database tables:
 
 ```

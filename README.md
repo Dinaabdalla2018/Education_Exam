@@ -4,8 +4,8 @@ This is a web application for online education that allows students to take exam
 
 ## Prerequisites 
 - Angular CLI
-- Visual Studio 2019
-- .NET Core 3.1
+- Visual Studio 2020
+- .NET Core 7
 - SQL Server 2017 or later
 
 ## Getting Started
